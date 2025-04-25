@@ -1,22 +1,89 @@
+// const fetchWithAuth = async (url, method = "GET", options = {}) => {
+//   const { isFormData = false } = options;
+
+//   try {
+//     const headers = { ...options.headers };
+
+//     if ((method === "PUT" || method === "POST") && !isFormData) {
+//       headers["Content-Type"] = "application/json";
+//       options.body = JSON.stringify(options.body);
+//     }
+
+//     const res = await fetch(url, {
+//       method,
+//       ...options,
+//       headers,
+//       credentials: "include",
+//     });
+
+//     const data = await res.json();
+
+//     // If token expired
+//     if (res.status === 401 && data.message === "Invalid! Access Token") {
+//       const refreshRes = await fetch("http://localhost:8080/api/user/update-access-token", {
+//         method: "POST",
+//         credentials: "include",
+//       });
+
+//       const refreshData = await refreshRes.json();
+
+//       if (refreshData.success) {
+//         const retryHeaders = { ...headers };
+//         let retryBody = options.body;
+
+//         if (!isFormData && typeof retryBody === "string") {
+//           retryBody = JSON.parse(retryBody); // convert back before re-JSONing
+//           retryBody = JSON.stringify(retryBody);
+//         }
+
+//         const retryRes = await fetch(url, {
+//           method,
+//           ...options,
+//           headers: retryHeaders,
+//           credentials: "include",
+//           body: retryBody,
+//         });
+
+//         return await retryRes.json();
+//       } else {
+//         throw new Error("Session expired. Please login again.");
+//       }
+//     }
+
+//     return data;
+
+//   } catch (error) {
+//     console.error("Error in fetchWithAuth:", error);
+//     throw error;
+//   }
+// };
+
+// export default fetchWithAuth;
+
 const fetchWithAuth = async (url, method = "GET", options = {}) => {
-  const { isFormData = false } = options;
+  const { isFormData = false, body } = options;
 
   try {
     const headers = { ...options.headers };
 
-    if ((method === "PUT" || method === "POST") && !isFormData) {
+    // Automatically set Content-Type if needed
+    if (
+      ["POST", "PUT", "PATCH", "DELETE"].includes(method) &&
+      !isFormData
+    ) {
       headers["Content-Type"] = "application/json";
-      options.body = JSON.stringify(options.body);
     }
 
-    const res = await fetch(url, {
+    const reqBody = !isFormData && body ? JSON.stringify(body) : body;
+
+    let res = await fetch(url, {
       method,
-      ...options,
       headers,
       credentials: "include",
+      body: reqBody,
     });
 
-    const data = await res.json();
+    let data = await res.json();
 
     // If token expired
     if (res.status === 401 && data.message === "Invalid! Access Token") {
@@ -29,22 +96,16 @@ const fetchWithAuth = async (url, method = "GET", options = {}) => {
 
       if (refreshData.success) {
         const retryHeaders = { ...headers };
-        let retryBody = options.body;
+        const retryBody = reqBody;
 
-        if (!isFormData && typeof retryBody === "string") {
-          retryBody = JSON.parse(retryBody); // convert back before re-JSONing
-          retryBody = JSON.stringify(retryBody);
-        }
-
-        const retryRes = await fetch(url, {
+        res = await fetch(url, {
           method,
-          ...options,
           headers: retryHeaders,
           credentials: "include",
           body: retryBody,
         });
 
-        return await retryRes.json();
+        return await res.json();
       } else {
         throw new Error("Session expired. Please login again.");
       }

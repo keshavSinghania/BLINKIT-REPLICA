@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 function Dashboard() {
     return (
-        <main className='flex'>
+        <main className='flex overflow-x-hidden overflow-y-hidden box-border'>
         {/* left section of dashboard */}
             <section>
                 <MyAccount/>

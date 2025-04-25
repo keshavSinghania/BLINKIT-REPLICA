@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import fetchWithAuth from '../utils/fetchAuth';
 import LoadingPage from './loadingPage';
 
-function UploadCategoryModel({ openModel, setOpenModel }) {
+function UploadCategoryModel({ openModel, setOpenModel,fetchCategory }) {
     const [name, setName] = useState("");
     const [imageUrl, setImageUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -64,6 +64,7 @@ function UploadCategoryModel({ openModel, setOpenModel }) {
                 setImageUrl(null);
                 if (fileInputRef.current) fileInputRef.current.value = null;
                 setOpenModel(false);
+                fetchCategory()
             }
         } catch (error) {
             toast.error("Something went wrong!");
@@ -73,7 +74,7 @@ function UploadCategoryModel({ openModel, setOpenModel }) {
     return (
         <>
             <section className={`w-full h-full fixed top-0 right-0 left-0 bg-[#766f6f7e] flex justify-center items-center ${openModel ? "block" : "hidden"}`}>
-                <div className='form bg-white w-[50vw] h-[40vh] rounded shadow'>
+                <div className='form bg-white w-[50vw] h-[44vh] rounded shadow'>
                     {/* NAV SECTION */}
                     <nav className='w-full h-[15%] flex justify-between items-center p-2'>
                         <p>Category</p>
@@ -106,17 +107,17 @@ function UploadCategoryModel({ openModel, setOpenModel }) {
                                     id='file'
                                     onChange={onChangeImageHandler}
                                 />
-                                {imageUrl && (
+                            </div>
+                        </div>
+                        {imageUrl && (
                                     <button
-                                        type="submit"
-                                        className={`p-2 rounded ${isUploading ? "bg-gray-200 cursor-not-allowed" : "bg-yellow-300 hover:bg-amber-400"}`}
+                                       type="submit"
+                                        className={`p-2 mt-2 rounded w-[100%] ${isUploading ? "bg-gray-200 cursor-not-allowed" : "bg-yellow-300 hover:bg-amber-400"}`}
                                         disabled={isUploading}
                                     >
                                         Upload
                                     </button>
                                 )}
-                            </div>
-                        </div>
                     </form>
                 </div>
 

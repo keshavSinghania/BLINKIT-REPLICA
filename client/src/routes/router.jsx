@@ -16,10 +16,10 @@ import { MyAccount } from "../components/MyAccount";
 import { MyOrders } from "../components/MyOrders";
 import { Address } from "../components/Address";
 import Profile from "../pages/Profile";
-import Cateogy from "../pages/Cateogy";
 import SubCategory from "../pages/SubCategory";
 import Products from "../pages/Products";
 import UploadProducts from "../pages/UploadProducts";
+import Category from "../pages/Category";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -63,7 +63,7 @@ const Router = createBrowserRouter([
                 children : [
                     {
                         path : "category",
-                        element : <Cateogy/>
+                        element : <Category/>
                     },
                     {
                         path : "sub-category",
