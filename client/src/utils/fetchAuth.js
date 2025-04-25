@@ -1,18 +1,19 @@
 const fetchWithAuth = async (url, method = "GET", options = {}) => {
+  const { isFormData = false } = options;
+
   try {
-    
-    if (method === "PUT" || method === "POST") {
-      options.headers = {
-        ...options.headers,
-        "Content-Type": "application/json",
-      };
+    const headers = { ...options.headers };
+
+    if ((method === "PUT" || method === "POST") && !isFormData) {
+      headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(options.body);
     }
 
     const res = await fetch(url, {
       method,
       ...options,
-      credentials: "include", // sends cookies (for authentication)
+      headers,
+      credentials: "include",
     });
 
     const data = await res.json();
@@ -27,11 +28,22 @@ const fetchWithAuth = async (url, method = "GET", options = {}) => {
       const refreshData = await refreshRes.json();
 
       if (refreshData.success) {
+        const retryHeaders = { ...headers };
+        let retryBody = options.body;
+
+        if (!isFormData && typeof retryBody === "string") {
+          retryBody = JSON.parse(retryBody); // convert back before re-JSONing
+          retryBody = JSON.stringify(retryBody);
+        }
+
         const retryRes = await fetch(url, {
           method,
           ...options,
+          headers: retryHeaders,
           credentials: "include",
+          body: retryBody,
         });
+
         return await retryRes.json();
       } else {
         throw new Error("Session expired. Please login again.");

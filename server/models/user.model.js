@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type : String,
-        default: "",
+        default: "http://res.cloudinary.com/dcopb72qy/image/upload/v1745405232/Blinkit/f5cjwr1rbhtgjlbj1y0o.jpg",
     },
     mobile : {
         type: Number,

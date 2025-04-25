@@ -7,6 +7,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import connectDB from "./config/connectDB.js";
 import userRouter from "./routes/user.route.js";
+import cloudinaryRouter from "./routes/cloudinary.route.js";
+import { categoryRouter } from "./routes/category.routes.js";
 
 //creating express app
 const app = express();
@@ -34,6 +36,8 @@ app.get("/",(req,res)=>{
 });
 
 app.use("/api/user",userRouter);
+app.use("/api/category",categoryRouter)
+app.use("/api/cloud",cloudinaryRouter);
 //connecting to the database and starting server
 connectDB().then(app.listen(PORT,()=>{
     console.log(`server is running at port number ${PORT}`);

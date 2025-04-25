@@ -27,17 +27,17 @@ const userSlice = createSlice({
   reducers: {
     updateUserInsideState: (state, action) => {
       const newUser = {
-        _id: action.payload?._id || "",
-        name: action.payload?.name || "",
-        email: action.payload?.email || "",
-        avatar: action.payload?.avatar || "",
-        mobile: action.payload?.mobile || "",
-        verify_email: action.payload?.verify_email || false,
-        last_login_date: action.payload?.last_login_date || "",
-        status: action.payload?.status || "",
-        shopping_cart: action.payload?.shopping_cart || [],
-        orderHistory: action.payload?.orderHistory || [],
-        role: action.payload?.role || ""
+        _id: action.payload?._id,
+        name: action.payload?.name ,
+        email: action.payload?.email,
+        avatar: action.payload?.avatar,
+        mobile: action.payload?.mobile,
+        verify_email: action.payload?.verify_email,
+        last_login_date: action.payload?.last_login_date,
+        status: action.payload?.status,
+        shopping_cart: action.payload?.shopping_cart,
+        orderHistory: action.payload?.orderHistory,
+        role: action.payload?.role
       };
 
       // Update state directly

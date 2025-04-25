@@ -8,6 +8,7 @@ import { generateOTP } from "../utils/generateOtp.js";
 import jwt from "jsonwebtoken";
 import { registrationTemplate } from "../utils/registrationEmailTemp.js";
 import { sendOtpEmailTemp } from "../utils/sendOtpEmailTemp.js";
+import uploadImageCloudinary from "../utils/uploadImageCloudinary.js";
 
 
 export const registerUserController = async(req,res)=>{
@@ -484,3 +485,50 @@ export const fetchUserDetails = async(req,res)=>{
         })
     }
 }
+
+//controller to receive image convert into cloudinary url and stores in database
+export const uploadAvatarController = async (req, res) => {
+    try {
+      const image = req.file; // Extracted by multer
+      const userId = req.userId; // Provided by auth middleware
+  
+    //   console.log("Received Image:", image);
+  
+      // Upload to Cloudinary
+      const cloudinaryUpload = await uploadImageCloudinary(image);
+  
+      const cloudinaryUrl = cloudinaryUpload?.url;
+    //   console.log(cloudinaryUrl)
+  
+      if (!cloudinaryUrl) {
+        return res.status(400).json({
+          message: "Error while uploading image to Cloudinary",
+          error: true,
+          success: false,
+        });
+      }
+  
+      // Update user's avatar in DB
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { avatar: cloudinaryUrl },
+      );
+  
+      return res.status(200).json({
+        message: "Successfully uploaded avatar",
+        success: true,
+        data: {
+          _id: updatedUser._id,
+          avatar: updatedUser.avatar,
+        },
+      });
+  
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message || "Something went wrong",
+        error: true,
+        success: false,
+      });
+    }
+  };
+  
