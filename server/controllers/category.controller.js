@@ -1,14 +1,23 @@
 
 import CategoryModel from "../models/category.model.js"
+import UserModel from "../models/user.model.js";
 
 //controller to save new category into database
 export const uploadCategory = async (req, res) => {
     try {
-        console.log("inside controller")
+        //from auth middleware
+        const userId = req.userId;
+        //checking user is admin or not
+        const userData = await UserModel.findById(userId);
+        if(userData.role !== "ADMIN"){
+            return res.status(400).json({
+                message : "Admin access is required to make these changes",
+                error : true,
+                success : false
+            })
+        }
         const imageUrl = String(req.body.image);
         const name = String(req.body.name);
-        console.log(name);
-        console.log(imageUrl)
         if (!imageUrl || !name) {
             return res.status(400).json({
                 message: "Please provide  all the necessary detailssss",
@@ -78,7 +87,17 @@ export const getCategory = async (req, res) => {
 export const editCategory = async (req, res) => {
     try {
         const { _id, name, image } = req.body;
-        console.log(_id)
+        //from auth middleware
+        const userId = req.userId;
+        //checking user is admin or not
+        const userData = await UserModel.findById(userId);
+        if(userData.role !== "ADMIN"){
+            return res.status(400).json({
+                message : "Admin access is required to make these changes",
+                error : true,
+                success : false
+            })
+        }
         if (!_id || !name || !image) {
             return res.status(400).json({
                 message: "Something went wrong while editing your category",
@@ -113,6 +132,17 @@ export const editCategory = async (req, res) => {
 //controller to delete catefory from database
 export const deleteCategory = async(req,res)=>{
     try {
+        //from auth middleware
+        const userId = req.userId;
+        //checking user is admin or not
+        const userData = await UserModel.findById(userId);
+        if(userData.role !== "ADMIN"){
+            return res.status(400).json({
+                message : "Admin access is required to make these changes",
+                error : true,
+                success : false
+            })
+        }
         const {_id} = req.body;
         console.log(_id)
         if(!_id){

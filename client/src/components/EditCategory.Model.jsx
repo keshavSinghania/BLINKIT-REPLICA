@@ -6,17 +6,20 @@ import { toast } from 'react-toastify';
 import { fetchCloudinarySingleImageUrl } from '../utils/fetchCloudinarySingleImageUrl';
 import LoadingPage from './loadingPage';
 import fetchWithAuth from '../utils/fetchAuth';
+import { fetchCategoryData } from '../utils/fetchCategoryData';
+import { useDispatch, useSelector } from 'react-redux';
 
-const  EditCategoryModel = ({openEditModel, setOpenEditModel, fetchCategory, edit_id})=> {
+const  EditCategoryModel = ({openEditModel, setOpenEditModel, edit_id})=> {
         const [name, setName] = useState("");
         const [imageUrl, setImageUrl] = useState(null);
         const [isUploading, setIsUploading] = useState(false);
         const fileInputRef = useRef(null);
+        const dispatch = useDispatch()
+        const categoryData = useSelector(state=> state.category)
 
         //fetching name, image using edit_id;
         const fetchEditProductData = async()=>{
-            const allData = await fetchCategory();
-            const editProductData = allData.filter((data) => data._id === edit_id);
+            const editProductData = categoryData.filter((data) => data._id === edit_id);
             if(editProductData.length == 0){
                 return
             }
@@ -71,9 +74,9 @@ const  EditCategoryModel = ({openEditModel, setOpenEditModel, fetchCategory, edi
                         // Clear fields
                         setName("");
                         setImageUrl(null);
+                        fetchCategoryData(dispatch);
                         if (fileInputRef.current) fileInputRef.current.value = null;
                         setOpenEditModel(false);
-                        fetchCategory()
                     }
                 } catch (error) {
                     toast.error("Something went wrong!");

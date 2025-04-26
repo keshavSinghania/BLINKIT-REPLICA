@@ -4,12 +4,15 @@ import { fetchCloudinarySingleImageUrl } from '../utils/fetchCloudinarySingleIma
 import { toast } from 'react-toastify';
 import fetchWithAuth from '../utils/fetchAuth';
 import LoadingPage from './loadingPage';
+import { fetchCategoryData } from '../utils/fetchCategoryData';
+import { useDispatch } from 'react-redux';
 
-function UploadCategoryModel({ openModel, setOpenModel,fetchCategory }) {
+function UploadCategoryModel({ openModel, setOpenModel, }) {
     const [name, setName] = useState("");
     const [imageUrl, setImageUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef(null);
+    const dispatch = useDispatch();
 
     // Clearing feilds like name imageUrl when model opening
     useEffect(() => {
@@ -62,9 +65,10 @@ function UploadCategoryModel({ openModel, setOpenModel,fetchCategory }) {
                 // Clear fields
                 setName("");
                 setImageUrl(null);
+                fetchCategoryData(dispatch)
                 if (fileInputRef.current) fileInputRef.current.value = null;
                 setOpenModel(false);
-                fetchCategory()
+                
             }
         } catch (error) {
             toast.error("Something went wrong!");

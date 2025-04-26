@@ -20,6 +20,7 @@ import SubCategory from "../pages/SubCategory";
 import Products from "../pages/Products";
 import UploadProducts from "../pages/UploadProducts";
 import Category from "../pages/Category";
+import OnlyAdminPerms from "../components/OnlyAdminPerms";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -63,19 +64,19 @@ const Router = createBrowserRouter([
                 children : [
                     {
                         path : "category",
-                        element : <Category/>
+                        element : <OnlyAdminPerms><Category/></OnlyAdminPerms>
                     },
                     {
                         path : "sub-category",
-                        element : <SubCategory/>
+                        element : <OnlyAdminPerms><SubCategory/></OnlyAdminPerms>
                     },
                     {
                         path : "products",
-                        element : <Products/>
+                        element : <OnlyAdminPerms><Products/></OnlyAdminPerms>
                     },
                     {
                         path : "upload-products",
-                        element : <UploadProducts/>
+                        element : <OnlyAdminPerms><UploadProducts/></OnlyAdminPerms>
                     },
                     {
                         path : "myorders",
