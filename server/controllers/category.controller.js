@@ -100,7 +100,7 @@ export const editCategory = async (req, res) => {
         }
         if (!_id || !name || !image) {
             return res.status(400).json({
-                message: "Something went wrong while editing your category",
+                message: "Please provide all the necessary details before updating",
                 error: true,
                 success: false
             })
