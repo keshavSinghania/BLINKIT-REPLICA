@@ -10,6 +10,7 @@ import userRouter from "./routes/user.route.js";
 import cloudinaryRouter from "./routes/cloudinary.route.js";
 import { categoryRouter } from "./routes/category.routes.js";
 import { subCategoryRouter } from "./routes/subCategory.routes.js";
+import { productRouter } from "./routes/product.route.js";
 
 //creating express app
 const app = express();
@@ -40,6 +41,7 @@ app.use("/api/user",userRouter);
 app.use("/api/category",categoryRouter)
 app.use("/api/cloud",cloudinaryRouter);
 app.use("/api/sub-category",subCategoryRouter);
+app.use("/api/product",productRouter);
 //connecting to the database and starting server
 connectDB().then(app.listen(PORT,()=>{
     console.log(`server is running at port number ${PORT}`);

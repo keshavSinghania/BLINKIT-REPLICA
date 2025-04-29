@@ -3,7 +3,7 @@ import { ImCross } from "react-icons/im";
 import { toast } from 'react-toastify';
 import { fetchCloudinarySingleImageUrl } from '../utils/fetchCloudinarySingleImageUrl';
 import fetchWithAuth from '../utils/fetchAuth';
-import LoadingPage from './loadingPage';
+import LoadingPage from './LoadingPage';
 import { fetchCategoryData } from '../utils/fetchCategoryData';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';

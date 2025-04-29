@@ -20,7 +20,7 @@ export const uploadCategory = async (req, res) => {
         const name = String(req.body.name);
         if (!imageUrl || !name) {
             return res.status(400).json({
-                message: "Please provide  all the necessary detailssss",
+                message: "Please provide  all the necessary details",
                 error: true,
                 success: false
             });
@@ -32,7 +32,7 @@ export const uploadCategory = async (req, res) => {
         };
 
         const newCategory = new CategoryModel(payload);
-        const savedCategory = newCategory.save()
+        const savedCategory = await newCategory.save()
         if (!savedCategory) {
             return res.status(500).json({
                 message: "Error while saving category into database",
