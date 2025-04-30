@@ -22,9 +22,9 @@ export const uploadProduct = async (req, res) => {
                 error: true,
                 success: false
             })
-        }
+        };
         //extracting sent data for updation
-        const { name, image, category, subCategory, unit, stock, price, discount, description,more_details } = req.body;
+        const { name, image, category, subCategory, unit, stock, price, discount, description, more_details } = req.body;
         // console.log(name)
         // console.log(image,"image")
         // console.log(category,"category")
@@ -67,11 +67,51 @@ export const uploadProduct = async (req, res) => {
             message: "Successfully added new product",
             error: false,
             success: true,
-            data : savedProduct
+            data: savedProduct
         })
     } catch (error) {
         return res.status(500).json({
             message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+//function to get products from db
+export const getProducts = async (req, res) => {
+    try {
+        let { page, limit, search } = req.body;
+
+        //by default page will be 1 and limit will be 12
+        if (!page) page = 1;
+        if (!limit) limit = 12;
+        
+        const query = search ? {
+            $text : {
+                $search : search
+            }
+        }: {};
+
+        const skip = (page - 1)*limit ;
+
+        const [data, totalCount] = await Promise.all([
+            ProductModel.find(query).sort({createdAt : -1}).skip(skip).limit(limit),
+            ProductModel.countDocuments(query)
+        ])
+
+        return res.status(200).json({
+            message : "Product data",
+            error : false ,
+            success : true,
+            totalCount : totalCount,
+            totalNoPages : Math.ceil(totalCount/limit),
+            data : data
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message || message,
             error: true,
             success: false
         })

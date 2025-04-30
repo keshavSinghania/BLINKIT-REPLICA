@@ -52,6 +52,14 @@ const productSchema = new mongoose.Schema({
     }
 },{timestamps :  true});
 
+//CRERATING TEXT INDEX SO THAT CAN SEARCH DATA EASILY BINARY SEARCH
+
+productSchema.index(
+    { name: "text", description: "text" },
+    { weights: { name: 10, description: 5 }, name: "TextIndex" }
+  );
+  
+
 //creating product model
 const ProductModel = mongoose.model("Product",productSchema);
 
