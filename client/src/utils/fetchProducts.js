@@ -7,7 +7,7 @@ export const fetchProducts = async (page, limit, search) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                page: page || 1,
+                page: page,
                 limit: limit || 12,
                 search: search || ""
             })

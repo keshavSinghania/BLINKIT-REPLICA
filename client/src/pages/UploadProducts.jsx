@@ -29,7 +29,7 @@ function UploadProducts() {
     image: [],
     category: [],
     subCategory: [],
-    unit: 0,
+    unit: "",
     stock: 0,
     price: 0,
     discount: 0,
@@ -110,39 +110,39 @@ function UploadProducts() {
       image: selectedImage,
     };
     // console.log(finalData,"final")
-    setData(finalData);
+    
     // console.log(data,"fianfufu")
     setIsloading(true)
     //updating data inside database
-    uploadProductInDb()
+    uploadProductInDb(finalData);
 
   };
 
   //function to set data pf product inside database
-  const uploadProductInDb = async () => {
+  const uploadProductInDb = async (finalData) => {
     try {
       const url = `${import.meta.env.VITE_FETCH_BASE_URL}product/upload-product`;
-      const response = await fetchWithAuth(url, "POST", { body: data});
-
+      const response = await fetchWithAuth(url, "POST", { body: finalData });
+  
       if (response.error) {
         toast.error(response.message);
-        setIsloading(false)
       } else if (response.success) {
         toast.success(response.message);
-        setIsloading(false)
         // Clear field
         setData(initialValue);
         setNewFieldData([]);
-        setFieldInput("")
+        setFieldInput("");
         setSelectedCategoryId([]);
         setSelectedSubCategoryId([]);
         setSelectedImage([]);
       }
     } catch (error) {
       toast.error("Something went wrong!");
-      setIsloading(false)
+    } finally {
+      setIsloading(false);
     }
   };
+  
   return (
     <>
       <main className='w-[85vw] min-h-[73vh]'>
@@ -275,7 +275,7 @@ function UploadProducts() {
             <div className='flex flex-col ml-3 mr-3 mb-1 gap-1'>
               <label htmlFor="name">Unit</label>
               <input
-                type="number"
+                type="text"
                 id="unit"
                 name='unit'
                 value={data.unit}
