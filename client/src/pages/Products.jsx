@@ -6,11 +6,13 @@ function Products() {
   const [page, setPage] = useState(1);
   const [limit, setLimits] = useState(14);
   const [search, setSearch] = useState("");
+  const [totalNoOfPages, setTotalNoPages] = useState()
 
   //function to get data of products from database
   const getProductsData = async () => {
     const finalData = await fetchProducts(page, limit, search);
     setData(finalData.data);
+    setTotalNoPages(finalData.totalNoPages)
   }
 
 
@@ -55,9 +57,9 @@ function Products() {
           className='bg:transparent text-black hover:bg-amber-300 p-1 border-1 border-amber-300 rounded'>
           Previous
         </button>
-        <p>{page}/2</p>
+        <p>{page}/{totalNoOfPages}</p>
         <button
-          onClick={() => setPage((prev) => prev + 1)}
+          onClick={() => {if(totalNoOfPages>page)setPage((prev) => prev + 1)}}
           className='bg:transparent text-black hover:bg-amber-300 p-1 border-1 border-amber-300 rounded'>
           Next
         </button>

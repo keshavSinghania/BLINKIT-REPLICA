@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import fetchUserDetails from '../utils/fetchUserDetails';
 import { updateUserInsideState } from '../store/userSlice';
+import banner from "../assets/banner.jpg"
+import mobileBanner from "../assets/banner-mobile.jpg"
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -26,15 +28,15 @@ function HomePage() {
   // console.log(userDetails, "db data");
 
   return (
-    <div>
-      <ul>
-        {Object.keys(userData).map((key, index) => (
-          <li key={index}>
-            {key}: {userData[key]}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+    {/* BANNER SECTION */}
+    <section className=' flex items-center justify-center'>
+      <div className={`flex rounded w-[98vw] min-h-[30vh] bg-blue-100 mt-2 ${!banner && "animate-pulse"}`}>
+        <img src={banner} alt="" className='lg:block hidden' />
+        <img src={mobileBanner} alt="" className='lg:hidden' />
+      </div>
+    </section>
+    </>
   );
 }
 
