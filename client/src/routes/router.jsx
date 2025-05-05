@@ -21,6 +21,8 @@ import Products from "../pages/Products";
 import UploadProducts from "../pages/UploadProducts";
 import Category from "../pages/Category";
 import OnlyAdminPerms from "../components/OnlyAdminPerms";
+import ProductDetails from "../pages/ProductDetails";
+import CategoryDetails from "../pages/CategoryDetails";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -91,6 +93,14 @@ const Router = createBrowserRouter([
                         element : <Profile/>
                     },
                 ]
+            },
+            {
+                path: "product/:productName/:_id",
+                element : <ProductDetails/>
+            },
+            {
+                path: "category/:categoryName/:_id",
+                element : <CategoryDetails/>
             }
         ]
     }

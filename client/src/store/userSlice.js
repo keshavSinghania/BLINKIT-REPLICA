@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Default user object
 const defaultUser = {
   _id: null,
-  name: "",
+  name: null,
   email: "",
   avatar: "",
   mobile: "",

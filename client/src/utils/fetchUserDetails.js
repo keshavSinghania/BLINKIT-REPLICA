@@ -1,29 +1,38 @@
 import fetchAuth from './fetchAuth.js';
+import { updateUserInsideState } from '../store/userSlice.js'; 
+const url = import.meta.env.VITE_FETCH_URL + "fetch-user-details";
 
-const url = import.meta.env.VITE_FETCH_URL+"fetch-user-details";
-// console.log(url)
-const fetchUserDetails = async () => {
+// Function to fetch user details
+const fetchUserDetails = async (dispatch) => {
   try {
     if (!url) {
       return {
         message: "Fetching URL is missing",
         error: true,
-        success: false
+        success: false,
       };
     }
+    const result = await fetchAuth(url, "GET"); 
 
-    const response = await fetchAuth(url,"GET");
-    const result = response || response.json();
-    // console.log(result);
-    return result; 
+    if (result.success) {
+      dispatch(updateUserInsideState(result.data));
+
+      return result;
+    } else {
+      return {
+        message: result.message || "Failed to fetch user details",
+        error: true,
+        success: false,
+      };
+    }
   } catch (error) {
     console.error("Error in fetchUserDetails:", error);
     return {
       message: error.message || "Something went wrong",
       error: true,
-      success: false
+      success: false,
     };
   }
 };
 
-export default fetchUserDetails
+export default fetchUserDetails;

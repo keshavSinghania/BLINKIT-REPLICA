@@ -86,27 +86,27 @@ export const getProducts = async (req, res) => {
         //by default page will be 1 and limit will be 12
         if (!page) page = 1;
         if (!limit) limit = 12;
-        
-        const query = search ? {
-            $text : {
-                $search : search
-            }
-        }: {};
 
-        const skip = (page - 1)*limit ;
+        const query = search ? {
+            $text: {
+                $search: search
+            }
+        } : {};
+
+        const skip = (page - 1) * limit;
 
         const [data, totalCount] = await Promise.all([
-            ProductModel.find(query).sort({createdAt : -1}).skip(skip).limit(limit),
+            ProductModel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
             ProductModel.countDocuments(query)
         ])
 
         return res.status(200).json({
-            message : "Product data",
-            error : false ,
-            success : true,
-            totalCount : totalCount,
-            totalNoPages : Math.ceil(totalCount/limit),
-            data : data
+            message: "Product data",
+            error: false,
+            success: true,
+            totalCount: totalCount,
+            totalNoPages: Math.ceil(totalCount / limit),
+            data: data
         })
 
     } catch (error) {
@@ -117,3 +117,105 @@ export const getProducts = async (req, res) => {
         })
     }
 }
+
+//function to get products by category id
+export const getProductsByCategoryId = async (req, res) => {
+    try {
+        const { _id } = req.body;
+
+        if (!_id) {
+            return res.status(400).json({
+                message: "Please provide category id",
+                error: true,
+                success: false
+            });
+        }
+
+        const productData = await ProductModel.find({
+            category: { $in: _id }
+        }).limit(15);
+
+        return res.status(200).json({
+            message: "Successfully fetched data based on your category id",
+            error: false,
+            success: true,
+            data: productData 
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || "Internal server error",
+            error: true,
+            success: false
+        });
+    }
+};
+
+//function to get products using sub-category
+export const getProductBySubCategoryId = async(req,res)=>{
+    try {
+        const _id = req.body;
+        if(!_id){
+            return res.status(400).json({
+                message : "Please provide sub-categegory id",
+                error : true,
+                success : true
+            })
+        };
+
+        const productData = await ProductModel.find({
+            subCategory: { $in: _id }
+        });
+
+        return res.status(200).json({
+            message: "Successfully fetched data based on your sub-category id",
+            error: false,
+            success: true,
+            data: productData
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || "Internal server error",
+            error: true,
+            success: false
+        });
+    }
+}
+
+export const getProductById = async (req, res) => {
+    try {
+        const { _id } = req.body;
+
+        if (!_id) {
+            return res.status(400).json({
+                message: "Please provide product ID",
+                error: true,
+                success: false
+            });
+        }
+
+        const productDetails = await ProductModel.findById(_id);
+
+        if (!productDetails) {
+            return res.status(404).json({
+                message: "Product not found in database",
+                error: true,
+                success: false
+            });
+        }
+
+        return res.status(200).json({
+            message: "Successfully fetched product details",
+            error: false,
+            success: true,
+            data: productDetails
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+};

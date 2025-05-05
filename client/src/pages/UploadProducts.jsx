@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 import Select from "react-select"
 import { fetchCloudinarySingleImageUrl } from '../utils/fetchCloudinarySingleImageUrl';
 import { toast } from 'react-toastify';
-import LoadingPage from '../components/LoadingPage';
+import LoadingPage from "../components/LoadingPage.jsx"
 import { useDispatch, useSelector } from 'react-redux';
 import fetchWithAuth from '../utils/fetchAuth';
 import { fetchCategoryData } from '../utils/fetchCategoryData';

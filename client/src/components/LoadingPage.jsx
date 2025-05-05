@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThreeDots } from 'react-loader-spinner';
 
- const LoadingPage= ({message})=> {
+ export const LoadingPage= ({message})=> {
     return (
         <div className='fixed inset-0 bg-[#c5c1c173] bg-opacity-50 z-50 flex justify-center items-center w-full h-full'>
 

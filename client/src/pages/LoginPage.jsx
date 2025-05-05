@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
+import { useDispatch } from "react-redux";
+import { updateUserInsideState } from "../store/userSlice"
+import fetchUserDetails from '../utils/fetchUserDetails';
+
 
 function LoginPage() {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   //for storing data received from to login
@@ -50,11 +55,16 @@ function LoginPage() {
         setLoading(false);
       }
       if (result.success) {
+        // Save tokens in localStorage
+        localStorage.setItem("access_token", result.data.access_token);
+        localStorage.setItem("refresh_token", result.data.refresh_token);
+        fetchUserDetails(dispatch);
         toast.success(result.message);
         setLoading(false);
-        navigate("/")
-
+        navigate("/");
       }
+      
+      
       setData({
         email: "",
         password: ""

@@ -15,7 +15,8 @@ import { MdAccountCircle } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-  const userName = useSelector((state) => state.user?.name || "Guest")
+  const userName = useSelector((state) => state.user?.name || null);
+  console.log(userName)
   const navigate = useNavigate()
   const location = useLocation();
   const [isSearchPage, setIsSearchPage] = useState(false);
@@ -76,7 +77,7 @@ const Navbar = () => {
               {/* login button and account section */}
               <section className='relative '>
                 {/* login and account text */}
-                {(userName === "Guest") ?
+                {(userName === null) ?
                   <h2 onClick={() => { navigate("/login") }} className='text-[20px] p-5 cursor-pointer' >Log In</h2>
                   :
                   <div className='flex items-center justify-center gap-1 w-[7vw] h-[6vh] text-lg text-gray-700'>
