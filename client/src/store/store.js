@@ -6,6 +6,6 @@ export const store = configureStore({
     reducer: {
         user : userSlice,
         category : categorySlice,
-        subCategory : subCategorySlice
+        subCategory : subCategorySlice,
     }
 })

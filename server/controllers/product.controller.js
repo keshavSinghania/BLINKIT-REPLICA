@@ -139,7 +139,7 @@ export const getProductsByCategoryId = async (req, res) => {
             message: "Successfully fetched data based on your category id",
             error: false,
             success: true,
-            data: productData 
+            data: productData
         });
 
     } catch (error) {
@@ -152,14 +152,14 @@ export const getProductsByCategoryId = async (req, res) => {
 };
 
 //function to get products using sub-category
-export const getProductBySubCategoryId = async(req,res)=>{
+export const getProductBySubCategoryId = async (req, res) => {
     try {
         const _id = req.body;
-        if(!_id){
+        if (!_id) {
             return res.status(400).json({
-                message : "Please provide sub-categegory id",
-                error : true,
-                success : true
+                message: "Please provide sub-categegory id",
+                error: true,
+                success: true
             })
         };
 
@@ -182,6 +182,7 @@ export const getProductBySubCategoryId = async(req,res)=>{
     }
 }
 
+//function to get product by using product id
 export const getProductById = async (req, res) => {
     try {
         const { _id } = req.body;
@@ -214,6 +215,55 @@ export const getProductById = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+};
+
+//function to get search products
+export const searchProducts = async (req, res) => {
+    try {
+        let { search, limit, page } = req.body;
+
+        limit = parseInt(limit) || 12;
+        page = parseInt(page) || 1;
+        let skip = (page - 1) * limit;
+        console.log(search)
+
+
+        const query = (typeof search === "string" && search.trim().length > 0)
+            ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } }
+                ]
+            }
+            : {};
+
+        const [data, totalDataCount] = await Promise.all([
+            ProductModel.find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("category subCategory"),
+            ProductModel.countDocuments(query)
+        ]);
+        // console.log(data);
+        // console.log(totalDataCount)
+        // console.log(limit, "limit")
+        return res.status(200).json({
+            message: "Successfully fetched products",
+            error: false,
+            success: true,
+            data,
+            totalCount: totalDataCount,
+            limit,
+            page
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || String(error),
             error: true,
             success: false
         });
